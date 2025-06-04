@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  ocr-api:
+    build: .
+    container_name: ocr-api-server
+    ports:
+      - "8888:8000"
+    environment:
+      # LM Studio Configuration (update these to match your setup)
+      - LM_STUDIO_BASE_URL=http://host.docker.internal:1234
+      - LM_STUDIO_API_KEY=
+      - LM_STUDIO_MODEL_NAME=nielsgl/RolmOCR-8bit
+      
+      # API Configuration
+      - MAX_FILE_SIZE_MB=10
+      - SUPPORTED_IMAGE_FORMATS=jpg,jpeg,png,bmp,tiff,webp
+      - SUPPORTED_PDF_MAX_PAGES=50
+      
+      # Server Configuration
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=false
+    volumes:
+      # Optional: mount a local directory for logs
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# Optional: Create a network for future services
+networks:
+  default:
+    name: ocr-network

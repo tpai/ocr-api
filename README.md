@@ -64,13 +64,37 @@ DEBUG=true
 
 ## Usage
 
-1. Start LM Studio and load the RolmOCR model
+### Local Development
+
+1. Start LM Studio and load the OCR model
 2. Start the API server:
 ```bash
 python main.py
 ```
 
 3. The API will be available at `http://localhost:8000`
+
+### Docker Deployment
+
+1. Start LM Studio and load the OCR model
+2. Build and run with Docker Compose:
+```bash
+docker-compose up --build
+```
+
+3. Or use Docker directly:
+```bash
+# Build the image
+docker build -t ocr-api .
+
+# Run the container
+docker run -p 8000:8000 \
+  -e LM_STUDIO_BASE_URL=http://host.docker.internal:1234 \
+  -e LM_STUDIO_MODEL_NAME=nielsgl/RolmOCR-8bit \
+  ocr-api
+```
+
+4. The API will be available at `http://localhost:8000`
 
 ## API Endpoints
 
